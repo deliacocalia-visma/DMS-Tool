@@ -38,8 +38,6 @@ jobs:
             --target-endpoint-arn ${{ env.TARGET_ENDPOINT_ARN }} \
             --replication-instance-arn ${{ env.REPLICATION_INSTANCE_ARN }} \
             --migration-type full-load-and-cdc \
-            --table-preparation-mode do-nothing \
-            --enable-validation \
             --table-mappings '{
                 "rules": [
                   {
