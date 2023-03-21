@@ -18,6 +18,9 @@ env:
 
 jobs:
   deploy:
+    permissions:
+        actions: write
+        id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
