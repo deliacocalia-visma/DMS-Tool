@@ -38,7 +38,7 @@ jobs:
             --source-endpoint-arn ${{ env.SOURCE_ENDPOINT_ARN }} \
             --target-endpoint-arn ${{ env.TARGET_ENDPOINT_ARN }} \
             --replication-instance-arn ${{ env.REPLICATION_INSTANCE_ARN }} \
-            --migration-type replicate-data \
+            --migration-type full-load-and-cdc \
             --table-mappings '[{
               "Type": "Include",
               "SourceSchema": "${{ env.SOURCE_SCHEMA_NAME }}",
