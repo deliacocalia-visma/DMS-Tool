@@ -1,0 +1,47 @@
+name: Configure DMS Jobs
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: eu-west-1
+  AWS_OPENID_CONNECT_PROVIDER_ARN: arn:aws:iam::124523898468:oidc-provider/token.actions.githubusercontent.com
+  AWS_ROLE_ARN: arn:aws:iam::124523898468:role/DMS-GITHUB-TEST
+  SOURCE_ENDPOINT_ARN: arn:aws:dms:eu-west-1:124523898468:endpoint:GWGREXCRDWOPRYDQKRS7A4S2SM7NZADOCMV4VDA
+  TARGET_ENDPOINT_ARN: arn:aws:dms:eu-west-1:124523898468:endpoint:EPBDPPQSIC76SYPPBHFN24XELWY3AX5ESD5J33Y
+  SOURCE_SCHEMA_NAME: tripletex
+  TARGET_SCHEMA_NAME: globaldata
+  TABLE_NAME: tripletexcompany
+  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          oidc-provider: ${{ env.AWS_OPENID_CONNECT_PROVIDER_ARN }}
+
+      - name: Create DMS task
+        run: |
+          aws dms create-replication-task \
+            --replication-task-id DMS-TEST \
+            --source-endpoint-arn ${{ env.SOURCE_ENDPOINT_ARN }} \
+            --target-endpoint-arn ${{ env.TARGET_ENDPOINT_ARN }} \
+            --migration-type replicate-data \
+            --no-include-drop-table \
+            --table-mappings '[{
+              "Type": "Include",
+              "SourceSchema": "${{ env.SOURCE_SCHEMA_NAME }}",
+              "SourceTable": "${{ env.TABLE_NAME }}",
+              "TargetSchema": "${{ env.TARGET_SCHEMA_NAME }}",
+              "TargetTable": "${{ env.TABLE_NAME }}"
+            }]'
