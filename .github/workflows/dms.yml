@@ -26,7 +26,7 @@ jobs:
 
       - name: Prompt for DMS task name
         id: prompt
-        uses: actions/toolkit@v3.0.0
+        uses: actions/toolkit@v5
         with:
           prompt: 'Enter the DMS task name:'
           env: ${{ env }}
