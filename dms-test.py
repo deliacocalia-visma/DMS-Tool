@@ -1,20 +1,18 @@
-import yaml
+import argparse
 import json
+import os
 import subprocess
+import yaml
 
-# Define the source and target endpoints
-source_endpoint = 'arn:aws:dms:eu-west-1:124523898468:endpoint:GWGREXCRDWOPRYDQKRS7A4S2SM7NZADOCMV4VDA'
-target_endpoint = 'arn:aws:dms:eu-west-1:124523898468:endpoint:EPBDPPQSIC76SYPPBHFN24XELWY3AX5ESD5J33Y'
-replication_instance = 'arn:aws:dms:eu-west-1:124523898468:rep:YH2AHWJ5IAPUWXJ6NEG62B6ITUEC7BCKQ6RZDYY'
 
 # Define the replication task settings
 rep_task_settings = {
-    'ReplicationTaskIdentifier': 'tripletex-to-globaldata',
-    'SourceEndpointArn': source_endpoint,
-    'TargetEndpointArn': target_endpoint,
-    'ReplicationInstanceArn': replication_instance,
-    'MigrationType': 'full-load-and-cdc',
-    'TableMappings': ''
+    'replication-task-identifier': 'tripletex-to-globaldata',
+    'source-endpoint-arn': os.environ['SOURCE_ENDPOINT_ARN'],
+    'target-endpoint-arn': os.environ['TARGET_ENDPOINT_ARN'],
+    'replication-instance-arn': os.environ['REPLICATION_INSTANCE_ARN'],
+    'migration-type': 'full-load-and-cdc',
+    'table-mappings': '',
 }
 
 # Load the table names from the YAML file
@@ -54,10 +52,21 @@ schema_rename_rule = {
 table_mappings['rules'].insert(0, schema_rename_rule)
 
 # Add the table mappings to the replication task settings
-rep_task_settings['TableMappings'] = json.dumps(table_mappings)
+rep_task_settings['table-mappings'] = json.dumps(table_mappings)
 
 # Create the replication task using AWS CLI
 cmd = ['aws', 'dms', 'create-replication-task']
 for key, value in rep_task_settings.items():
     cmd.extend(['--'+key, value])
-subprocess.run(cmd)
+
+
+if __name__ == "__main__":
+    argParser = argparse.ArgumentParser()
+    argParser.add_argument('--noop', action='store_true')
+
+    args = argParser.parse_args()
+    if args.noop:
+        print(cmd)
+    else:
+        subprocess.run(cmd)
+
