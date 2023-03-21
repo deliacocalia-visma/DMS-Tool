@@ -40,16 +40,28 @@ jobs:
             --replication-instance-arn ${{ env.REPLICATION_INSTANCE_ARN }} \
             --migration-type full-load-and-cdc \
             --table-mappings '{
-              "rules": [
-                {
-                  "rule-type": "selection",
-                  "rule-id": "1",
-                  "rule-name": "1",
-                  "object-locator": {
-                    "schema-name": "tripletex",
-                    "table-name": "tripletexcompany"
+                "rules": [
+                  {
+                    "rule-type": "transformation",
+                    "rule-id": "397103197",
+                    "rule-name": "397103197",
+                    "rule-target": "schema",
+                    "object-locator": {
+                      "schema-name": "tripletex"
+                    },
+                    "rule-action": "rename",
+                    "value": "globaldata",
+                    "old-value": null
                   },
-                  "rule-action": "include"
-                }
-              ]
-            }'
+                  {
+                    "rule-type": "selection",
+                    "rule-id": "1",
+                    "rule-name": "1",
+                    "object-locator": {
+                      "schema-name": "tripletex",
+                      "table-name": "tripletexcompany"
+                    },
+                    "rule-action": "include"
+                  }
+                ]
+              }'
