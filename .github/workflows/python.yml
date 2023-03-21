@@ -13,6 +13,7 @@ env:
 
 jobs:
   run-python-script:
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
