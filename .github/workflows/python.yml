@@ -1,0 +1,33 @@
+name: Run Python script when table_names.yml is modified
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'table_names.yml'
+
+env:
+  AWS_REGION: eu-west-1
+  AWS_ROLE_ARN: arn:aws:iam::124523898468:role/DMS-GITHUB-TEST
+
+jobs:
+  run-python-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9  
+
+      - name: Run Python script
+        run: python dms-test.py  
