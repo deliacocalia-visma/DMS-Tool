@@ -49,7 +49,7 @@ jobs:
                     "schema-name": "tripletex",
                     "table-name": "tripletexcompany"
                   },
-                  "rule-action": "include",
+                  "rule-action": "include"
                 }
               ]
             }'
