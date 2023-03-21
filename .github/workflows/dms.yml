@@ -39,7 +39,6 @@ jobs:
             --target-endpoint-arn ${{ env.TARGET_ENDPOINT_ARN }} \
             --replication-instance-arn ${{ env.REPLICATION_INSTANCE_ARN }} \
             --migration-type replicate-data \
-            --no-include-drop-table \
             --table-mappings '[{
               "Type": "Include",
               "SourceSchema": "${{ env.SOURCE_SCHEMA_NAME }}",
