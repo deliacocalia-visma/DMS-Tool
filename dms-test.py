@@ -26,8 +26,8 @@ table_mappings = {
 for table_name in table_names:
     table_mapping = {
         'rule-type': 'selection',
-        'rule-id': table_name,
-        'rule-name': table_name,
+        'rule-id': 2,
+        'rule-name': 2,
         'object-locator': {
             'schema-name': 'tripletex',
             'table-name': table_name
