@@ -22,6 +22,10 @@ jobs:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
+      - name: Prompt for DMS task name
+        id: prompt_task_name
+        run: |
+          echo "::set-output name=dms_task_name::$(read -p 'Enter the DMS task name: ' name && echo $$name)"
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -34,17 +38,19 @@ jobs:
       - name: Create DMS task
         run: |
           aws dms create-replication-task \
-            --replication-task-id DMS-TEST \
+             --replication-task-id ${{ steps.prompt_task_name.outputs.dms_task_name }} \
             --source-endpoint-arn ${{ env.SOURCE_ENDPOINT_ARN }} \
             --target-endpoint-arn ${{ env.TARGET_ENDPOINT_ARN }} \
             --replication-instance-arn ${{ env.REPLICATION_INSTANCE_ARN }} \
             --migration-type full-load-and-cdc \
+            --table-preparation-mode do-nothing \
+            --enable-validation \
             --table-mappings '{
                 "rules": [
                   {
                     "rule-type": "transformation",
-                    "rule-id": "397103197",
-                    "rule-name": "397103197",
+                    "rule-id": "1",
+                    "rule-name": "1",
                     "rule-target": "schema",
                     "object-locator": {
                       "schema-name": "tripletex"
@@ -55,8 +61,8 @@ jobs:
                   },
                   {
                     "rule-type": "selection",
-                    "rule-id": "1",
-                    "rule-name": "1",
+                    "rule-id": "2",
+                    "rule-name": "2",
                     "object-locator": {
                       "schema-name": "tripletex",
                       "table-name": "tripletexcompany"
