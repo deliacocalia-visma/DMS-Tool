@@ -24,12 +24,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Prompt for DMS task name
-        id: prompt
-        uses: actions/toolkit@v5
+      - name: Ask for DMS Task ID
+        id: dms-task-id
+        uses: andstor/ask-question-action@v1
         with:
-          prompt: 'Enter the DMS task name:'
-          env: ${{ env }}
+          name: DMS Task ID
+          default: DMS-TEST
+          required: true
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -40,7 +41,7 @@ jobs:
       - name: Create DMS task
         run: |
           aws dms create-replication-task \
-            --replication-task-id ${{ steps.prompt.outputs.result }} \
+            --replication-task-id ${{ steps.dms-task-id.outputs.answer }} \
             --source-endpoint-arn ${{ env.SOURCE_ENDPOINT_ARN }} \
             --target-endpoint-arn ${{ env.TARGET_ENDPOINT_ARN }} \
             --replication-instance-arn ${{ env.REPLICATION_INSTANCE_ARN }} \
