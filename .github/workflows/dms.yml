@@ -38,7 +38,7 @@ jobs:
       - name: Create DMS task
         run: |
           aws dms create-replication-task \
-             --replication-task-id ${{ steps.prompt_task_name.outputs.dms_task_name }} \
+            --replication-task-id ${{ steps.prompt_task_name.outputs.dms_task_name }} \
             --source-endpoint-arn ${{ env.SOURCE_ENDPOINT_ARN }} \
             --target-endpoint-arn ${{ env.TARGET_ENDPOINT_ARN }} \
             --replication-instance-arn ${{ env.REPLICATION_INSTANCE_ARN }} \
