@@ -49,7 +49,10 @@ jobs:
                     "schema-name": "tripletex",
                     "table-name": "tripletexcompany"
                   },
-                  "rule-action": "include"
+                  "rule-action": "include",
+                  "filters": [],
+                  "table-to-table-settings": {
+                      "target-schema-name": "globaldata"
                 }
               ]
             }'
