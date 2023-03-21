@@ -28,7 +28,6 @@ jobs:
         with:
           aws-region: ${{ env.AWS_REGION }}
           role-to-assume: ${{ env.AWS_ROLE_ARN }}
-          oidc-provider: ${{ env.AWS_OPENID_CONNECT_PROVIDER_ARN }}
 
       - name: Create DMS task
         run: |
