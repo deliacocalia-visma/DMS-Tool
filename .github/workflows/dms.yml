@@ -9,6 +9,7 @@ env:
   AWS_REGION: eu-west-1
   AWS_OPENID_CONNECT_PROVIDER_ARN: arn:aws:iam::124523898468:oidc-provider/token.actions.githubusercontent.com
   AWS_ROLE_ARN: arn:aws:iam::124523898468:role/DMS-GITHUB-TEST
+  REPLICATION_INSTANCE_ARN: arn:aws:dms:eu-west-1:124523898468:rep:YH2AHWJ5IAPUWXJ6NEG62B6ITUEC7BCKQ6RZDYY
   SOURCE_ENDPOINT_ARN: arn:aws:dms:eu-west-1:124523898468:endpoint:GWGREXCRDWOPRYDQKRS7A4S2SM7NZADOCMV4VDA
   TARGET_ENDPOINT_ARN: arn:aws:dms:eu-west-1:124523898468:endpoint:EPBDPPQSIC76SYPPBHFN24XELWY3AX5ESD5J33Y
   SOURCE_SCHEMA_NAME: tripletex
@@ -36,6 +37,7 @@ jobs:
             --replication-task-id DMS-TEST \
             --source-endpoint-arn ${{ env.SOURCE_ENDPOINT_ARN }} \
             --target-endpoint-arn ${{ env.TARGET_ENDPOINT_ARN }} \
+            --replication-instance-arn ${{ env.REPLICATION_INSTANCE_ARN }} \
             --migration-type replicate-data \
             --no-include-drop-table \
             --table-mappings '[{
