@@ -39,4 +39,17 @@ jobs:
             --target-endpoint-arn ${{ env.TARGET_ENDPOINT_ARN }} \
             --replication-instance-arn ${{ env.REPLICATION_INSTANCE_ARN }} \
             --migration-type full-load-and-cdc \
-            --table-mappings '[  {    "Type": "Include",    "SourceSchema": "${{ env.SCHEMA_NAME }}",    "SourceTable": "${{ env.SOURCE_TABLE_NAME }}",    "TargetSchema": "${{ env.SCHEMA_NAME }}",    "TargetTable": "${{ env.TARGET_TABLE_NAME }}"  }]'
+            --table-mappings '{
+              "rules": [
+                {
+                  "rule-type": "selection",
+                  "rule-id": "1",
+                  "rule-name": "1",
+                  "object-locator": {
+                    "schema-name": "tripletex",
+                    "table-name": "tripletexcompany"
+                  },
+                  "rule-action": "include"
+                }
+              ]
+            }'
