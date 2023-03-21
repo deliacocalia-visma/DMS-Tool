@@ -24,43 +24,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' # install the python version needed
+          
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: ${{ env.AWS_REGION }}
           role-to-assume: ${{ env.AWS_ROLE_ARN }}
 
-      - name: Create DMS task
+      - name: install python packages
         run: |
-          aws dms create-replication-task \
-            --replication-task-id DMS-TEST \
-            --source-endpoint-arn ${{ env.SOURCE_ENDPOINT_ARN }} \
-            --target-endpoint-arn ${{ env.TARGET_ENDPOINT_ARN }} \
-            --replication-instance-arn ${{ env.REPLICATION_INSTANCE_ARN }} \
-            --migration-type full-load-and-cdc \
-            --table-mappings '{
-                "rules": [
-                  {
-                    "rule-type": "transformation",
-                    "rule-id": "1",
-                    "rule-name": "1",
-                    "rule-target": "schema",
-                    "object-locator": {
-                      "schema-name": "tripletex"
-                    },
-                    "rule-action": "rename",
-                    "value": "globaldata",
-                    "old-value": null
-                  },
-                  {
-                    "rule-type": "selection",
-                    "rule-id": "2",
-                    "rule-name": "2",
-                    "object-locator": {
-                      "schema-name": "tripletex",
-                      "table-name": "tripletexcompany"
-                    },
-                    "rule-action": "include"
-                  }
-                ]
-              }'
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: execute py script # run main.py
+        run: python main.py
