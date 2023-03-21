@@ -15,19 +15,21 @@ env:
   SOURCE_SCHEMA_NAME: tripletex
   TARGET_SCHEMA_NAME: globaldata
   TABLE_NAME: tripletexcompany
-  
 
 jobs:
   deploy:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
-      - name: Prompt for DMS task name
-        id: prompt_task_name
-        run: |
-          echo "::set-output name=dms_task_name::$(read -p 'Enter the DMS task name: ' name && echo $$name)"
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Prompt for DMS task name
+        id: prompt
+        uses: actions/toolkit@v3.0.0
+        with:
+          prompt: 'Enter the DMS task name:'
+          env: ${{ env }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -38,7 +40,7 @@ jobs:
       - name: Create DMS task
         run: |
           aws dms create-replication-task \
-            --replication-task-id ${{ steps.prompt_task_name.outputs.dms_task_name }} \
+            --replication-task-id ${{ steps.prompt.outputs.result }} \
             --source-endpoint-arn ${{ env.SOURCE_ENDPOINT_ARN }} \
             --target-endpoint-arn ${{ env.TARGET_ENDPOINT_ARN }} \
             --replication-instance-arn ${{ env.REPLICATION_INSTANCE_ARN }} \
