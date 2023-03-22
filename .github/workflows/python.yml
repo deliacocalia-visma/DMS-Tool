@@ -15,10 +15,6 @@ jobs:
   run-python-script:
     permissions: write-all
     runs-on: ubuntu-latest
-    env: 
-      REPLICATION_INSTANCE_ARN: ${{ env.REPLICATION_INSTANCE_ARN }}
-      SOURCE_ENDPOINT_ARN: ${{ env.SOURCE_ENDPOINT_ARN }}
-      TARGET_ENDPOINT_ARN: ${{ env.TARGET_ENDPOINT_ARN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -38,4 +34,8 @@ jobs:
         run: pip install pyyaml
 
       - name: Run Python script
+        env: 
+          REPLICATION_INSTANCE_ARN: ${{ env.REPLICATION_INSTANCE_ARN }}
+          SOURCE_ENDPOINT_ARN: ${{ env.SOURCE_ENDPOINT_ARN }}
+          TARGET_ENDPOINT_ARN: ${{ env.TARGET_ENDPOINT_ARN }}
         run: python dms-test.py  
