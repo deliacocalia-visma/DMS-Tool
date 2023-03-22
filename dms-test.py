@@ -8,9 +8,9 @@ import yaml
 # Define the replication task settings
 rep_task_settings = {
     'replication-task-identifier': 'tripletex-to-globaldata',
-    'source-endpoint-arn': os.environ['INFRA_ENV_VARIABLES_SOURCE_ENDPOINT_ARN'],
-    'target-endpoint-arn': os.environ['INFRA_ENV_VARIABLES_TARGET_ENDPOINT_ARN'],
-    'replication-instance-arn': os.environ['INFRA_ENV_VARIABLES_REPLICATION_INSTANCE_ARN'],
+    'source-endpoint-arn': os.environ['SOURCE_ENDPOINT_ARN'],
+    'target-endpoint-arn': os.environ['TARGET_ENDPOINT_ARN'],
+    'replication-instance-arn': os.environ['REPLICATION_INSTANCE_ARN'],
     'migration-type': 'full-load-and-cdc',
     'table-mappings': '',
 }
