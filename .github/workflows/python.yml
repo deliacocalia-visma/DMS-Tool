@@ -33,15 +33,9 @@ jobs:
       - name: Install PyYAML
         run: pip install pyyaml
 
-      - name: Print environment variables
-        run: |
-          echo "REPLICATION_INSTANCE_ARN: ${{ secrets.REPLICATION_INSTANCE_ARN }}"
-          echo "SOURCE_ENDPOINT_ARN: ${{ secrets.INFRA_ENV_VARIABLES.REPLICATION_INSTANCE_ARN }}"
-          echo "TARGET_ENDPOINT_ARN: ${{ secrets.INFRA_ENV_VARIABLES.REPLICATION_INSTANCE_ARN }}"
-
       - name: Run Python script
         env: 
-          REPLICATION_INSTANCE_ARN: ${{ env.REPLICATION_INSTANCE_ARN }}
-          SOURCE_ENDPOINT_ARN: ${{ env.SOURCE_ENDPOINT_ARN }}
-          TARGET_ENDPOINT_ARN: ${{ env.TARGET_ENDPOINT_ARN }}
+          REPLICATION_INSTANCE_ARN: ${{ secrets.REPLICATION_INSTANCE_ARN }}
+          SOURCE_ENDPOINT_ARN: ${{ secrets.SOURCE_ENDPOINT_ARN }}
+          TARGET_ENDPOINT_ARN: ${{ secrets.TARGET_ENDPOINT_ARN }}
         run: python dms-test.py  
