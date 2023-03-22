@@ -35,7 +35,7 @@ jobs:
 
       - name: Print environment variables
         run: |
-          echo "REPLICATION_INSTANCE_ARN: ${{ secrets.INFRA_ENV_VARIABLES.REPLICATION_INSTANCE_ARN }}"
+          echo "REPLICATION_INSTANCE_ARN: ${{ secrets.REPLICATION_INSTANCE_ARN }}"
           echo "SOURCE_ENDPOINT_ARN: ${{ secrets.INFRA_ENV_VARIABLES.REPLICATION_INSTANCE_ARN }}"
           echo "TARGET_ENDPOINT_ARN: ${{ secrets.INFRA_ENV_VARIABLES.REPLICATION_INSTANCE_ARN }}"
 
