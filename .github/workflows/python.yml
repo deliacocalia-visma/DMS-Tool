@@ -30,5 +30,8 @@ jobs:
         with:
           python-version: 3.9  
 
+      - name: Install PyYAML
+        run: pip install pyyaml
+
       - name: Run Python script
         run: python dms-test.py  
