@@ -15,6 +15,10 @@ jobs:
   run-python-script:
     permissions: write-all
     runs-on: ubuntu-latest
+    env: 
+      REPLICATION_INSTANCE_ARN: ${{ vars.REPLICATION_INSTANCE_ARN }}
+      SOURCE_ENDPOINT_ARN: ${{ vars.SOURCE_ENDPOINT_ARN }}
+      TARGET_ENDPOINT_ARN: ${{ vars.TARGET_ENDPOINT_ARN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
