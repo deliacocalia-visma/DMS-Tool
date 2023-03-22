@@ -10,14 +10,15 @@ on:
 env:
   AWS_REGION: eu-west-1
   AWS_ROLE_ARN: arn:aws:iam::124523898468:role/DMS-GITHUB-TEST
-  REPLICATION_INSTANCE_ARN: ${{ env.REPLICATION_INSTANCE_ARN }}
-  SOURCE_ENDPOINT_ARN: ${{ env.SOURCE_ENDPOINT_ARN }}
-  TARGET_ENDPOINT_ARN: ${{ env.TARGET_ENDPOINT_ARN }}
 
 jobs:
   run-python-script:
     permissions: write-all
     runs-on: ubuntu-latest
+    env: 
+      REPLICATION_INSTANCE_ARN: ${{ env.REPLICATION_INSTANCE_ARN }}
+      SOURCE_ENDPOINT_ARN: ${{ env.SOURCE_ENDPOINT_ARN }}
+      TARGET_ENDPOINT_ARN: ${{ env.TARGET_ENDPOINT_ARN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
