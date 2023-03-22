@@ -89,6 +89,7 @@ for table_name in table_names:
         TableMappings=rep_task_settings['table-mappings'],
         ReplicationTaskSettings=json.dumps(task_settings)
     )
+    print('Created DMS Replication Task for table '+table_name.strip())
   except Exception as e:
     print(f"An error occurred: {e}")
 
