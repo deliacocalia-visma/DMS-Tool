@@ -33,6 +33,12 @@ jobs:
       - name: Install PyYAML
         run: pip install pyyaml
 
+      - name: Print environment variables
+        run: |
+          echo "REPLICATION_INSTANCE_ARN: ${{ env.REPLICATION_INSTANCE_ARN }}"
+          echo "SOURCE_ENDPOINT_ARN: ${{ env.SOURCE_ENDPOINT_ARN }}"
+          echo "TARGET_ENDPOINT_ARN: ${{ env.TARGET_ENDPOINT_ARN }}"
+
       - name: Run Python script
         env: 
           REPLICATION_INSTANCE_ARN: ${{ env.REPLICATION_INSTANCE_ARN }}
