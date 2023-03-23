@@ -20,6 +20,28 @@ table_actions = table_names_file.readlines()
 # Create the table mappings for each table
 client = boto3.client('dms')
 
+# Get all existing replication tasks
+existing_tasks = client.describe_replication_tasks()['ReplicationTasks']
+
+# Create a list of replication task identifiers from the 'table_names' file
+task_identifiers = [task.strip() for task in table_actions]
+
+# Create a list of replication task ARNs from the existing tasks
+task_arns = [task['ReplicationTaskArn'] for task in existing_tasks]
+
+# Delete any existing replication tasks that are not in the 'table_names' file
+for task in existing_tasks:
+    if task['ReplicationTaskIdentifier'] not in task_identifiers:
+        try:
+            client.delete_replication_task(
+                ReplicationTaskArn=task['ReplicationTaskArn'])
+            print(
+                f"Deleted DMS Replication Task {task['ReplicationTaskIdentifier']}")
+        except Exception as e:
+            print(
+                f"An error occurred while deleting DMS Replication Task {task['ReplicationTaskIdentifier']}: {e}")
+
+# Create new replication tasks for each table in the 'table_names' file
 for table_action in table_actions:
     counter = 1
     pre, direction, table_name = table_action.strip().split('-', 2)
