@@ -10,5 +10,12 @@ class TestConfigFileMethods(unittest.TestCase):
         self.assertEqual(tables, ['table1'])
 
 
+    def test_read_file_with_error(self):
+        with self.assertRaises(Exception) as context:
+            get_tables('test/testfile_with_error.yaml')
+
+        self.assertTrue('unknown migration direction specified' in str(context.exception))
+
+
 if __name__ == '__main__':
     unittest.main()

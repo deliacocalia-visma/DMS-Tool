@@ -16,8 +16,13 @@ def get_tables(filename='table_names.yaml'):
             print(e)
 
     for key in file_contents:
-        if file_contents[key] == "tripletex_to_globaldata":
+        direction = file_contents[key]
+
+        # ensure the migration description is known, or let the user know
+        if direction == "tripletex_to_globaldata":
             table_actions.append(key)
+        else:
+            raise Exception(f"unknown migration direction specified: '{direction}'")
 
     return table_actions
 
