@@ -1,9 +1,7 @@
-import argparse
 import json
 import os
-import subprocess
-import yaml
 import boto3
+
 
 # Define the replication task settings
 rep_task_settings = {
@@ -17,79 +15,95 @@ rep_task_settings = {
 
 # Load the table names from the file
 table_names_file = open('table_names', 'r')
-table_names=table_names_file.readlines()
+table_actions = table_names_file.readlines()
 
 # Create the table mappings for each table
 client = boto3.client('dms')
-for table_name in table_names:
-  table_mappings = {
-    'rules': []
-  }
-  table_mapping = {
-      'rule-type': 'selection',
-      'rule-id': '2',
-      'rule-name': '2',
-      'object-locator': {
-          'schema-name': 'tripletex',
-          'table-name': table_name.strip()
-      },
-      'rule-action': 'include'
-  }
-  table_mappings['rules'].append(table_mapping)
 
-  # Add the schema renaming rule to the table mappings
-  schema_rename_rule = {
-      'rule-type': 'transformation',
-      'rule-id': '1',
-      'rule-name': '1',
-      'rule-target': 'schema',
-      'object-locator': {
-          'schema-name': 'tripletex'
-      },
-      'rule-action': 'rename',
-      'value': 'globaldata',
-      'old-value': None
-  }
-  table_mappings['rules'].insert(0, schema_rename_rule)
+for table_action in table_actions:
+    counter = 1
+    pre, direction, table_name = table_action.strip().split('-', 2)
+    if direction == 'globaldata':
+        schema_name = 'tripletex'
+        target_schema_name = 'globaldata'
+    elif direction == 'tripletex':
+        schema_name = 'globaldata'
+        target_schema_name = 'tripletex'
+    else:
+        print(f"Invalid direction specified for table {table_name}")
+        continue
 
-  # Add the table mappings to the replication task settings
-  rep_task_settings['table-mappings'] = json.dumps(table_mappings)
+    table_mappings = {
+        'rules': []
+    }
+    table_mapping = {
+        'rule-type': 'selection',
+        'rule-id': str(counter),
+        'rule-name': str(counter),
+        'object-locator': {
+            'schema-name': schema_name,
+            'table-name': table_name
+        },
+        'rule-action': 'include'
+    }
+    counter += 1
+    table_mappings['rules'].append(table_mapping)
 
-  task_settings = {
-      'FullLoadSettings': {
-          'TargetTablePrepMode': 'DO_NOTHING'
-      },
-      'ValidationSettings': {
-          'ValidationPartialLobSize': 0,
-          'PartitionSize': 10000,
-          'RecordFailureDelayLimitInMinutes': 0,
-          'SkipLobColumns': False,
-          'FailureMaxCount': 10000,
-          'HandleCollationDiff': False,
-          'ValidationQueryCdcDelaySeconds': 0,
-          'ValidationMode': 'ROW_LEVEL',
-          'TableFailureMaxCount': 1000,
-          'RecordFailureDelayInMinutes': 5,
-          'MaxKeyColumnSize': 8096,
-          'EnableValidation': True,
-          'ThreadCount': 5,
-          'RecordSuspendDelayInMinutes': 30,
-          'ValidationOnly': False
-      }
-  }
+    # Add the schema renaming rule to the table mappings
+    schema_rename_rule = {
+        'rule-type': 'transformation',
+        'rule-id': str(counter),
+        'rule-name': str(counter),
+        'rule-target': 'schema',
+        'object-locator': {
+            'schema-name': schema_name
+        },
+        'rule-action': 'rename',
+        'value': target_schema_name,
+        'old-value': None
+    }
+    counter += 1
+    table_mappings['rules'].insert(0, schema_rename_rule)
 
-  # Create replication task
-  try:
-    response = client.create_replication_task(
-        ReplicationTaskIdentifier=table_name.strip()+'-to-globaldata',
-        SourceEndpointArn=rep_task_settings['source-endpoint-arn'],
-        TargetEndpointArn=rep_task_settings['target-endpoint-arn'],
-        ReplicationInstanceArn=rep_task_settings['replication-instance-arn'],
-        MigrationType='full-load-and-cdc',
-        TableMappings=rep_task_settings['table-mappings'],
-        ReplicationTaskSettings=json.dumps(task_settings)
-    )
-    print('Created DMS Replication Task for table '+table_name.strip())
-  except Exception as e:
-    print(f"An error occurred: {e}")
+    # Add the table mappings to the replication task settings
+    rep_task_settings['table-mappings'] = json.dumps(table_mappings)
 
+    task_settings = {
+        'FullLoadSettings': {
+            'TargetTablePrepMode': 'DO_NOTHING'
+        },
+        'ValidationSettings': {
+            'ValidationPartialLobSize': 0,
+            'PartitionSize': 10000,
+            'RecordFailureDelayLimitInMinutes': 0,
+            'SkipLobColumns': False,
+            'FailureMaxCount': 10000,
+            'HandleCollationDiff': False,
+            'ValidationQueryCdcDelaySeconds': 0,
+            'ValidationMode': 'ROW_LEVEL',
+            'TableFailureMaxCount': 1000,
+            'RecordFailureDelayInMinutes': 5,
+            'MaxKeyColumnSize': 8096,
+            'EnableValidation': True,
+            'ThreadCount': 5,
+            'RecordSuspendDelayInMinutes': 30,
+            'ValidationOnly': False
+        }
+    }
+
+    # Create replication task
+    try:
+        response = client.create_replication_task(
+            ReplicationTaskIdentifier=table_action.strip(),
+            SourceEndpointArn=rep_task_settings['source-endpoint-arn'],
+            TargetEndpointArn=rep_task_settings['target-endpoint-arn'],
+            ReplicationInstanceArn=rep_task_settings['replication-instance-arn'],
+            MigrationType='full-load-and-cdc',
+            TableMappings=rep_task_settings['table-mappings'],
+            ReplicationTaskSettings=json.dumps(task_settings),
+            Tags=[{'Key': 'Generated by',            'Value': 'GitHub DMS Tool'},]
+        )
+
+        print('Created DMS Replication Task for table '+table_name.strip())
+    except Exception as e:
+        print(f"An error occurred: {e}")
