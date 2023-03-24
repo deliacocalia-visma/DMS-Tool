@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'table_names'
+      - 'table_names.yml'
 
 env:
   AWS_REGION: eu-west-1
