@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'table_names'
+      - 'table_names.yml'
 
 env:
   AWS_REGION: eu-west-1
@@ -38,4 +38,4 @@ jobs:
           REPLICATION_INSTANCE_ARN: ${{ secrets.REPLICATION_INSTANCE_ARN }}
           SOURCE_ENDPOINT_ARN: ${{ secrets.SOURCE_ENDPOINT_ARN }}
           TARGET_ENDPOINT_ARN: ${{ secrets.TARGET_ENDPOINT_ARN }}
-        run: python dms-task.py  
+        run: python dms_task.py
