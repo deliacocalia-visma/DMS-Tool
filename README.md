@@ -12,7 +12,7 @@ table2: to-tripletex
 table3: to-globaldata
 ```
 
-In this example, table1 and table3 will be replicated from the source endpoint to the target endpoint, while table2 will be replicated from the target endpoint to the source endpoint.
+In this example, table1 and table3 will be replicated from the source endpoint to the target endpoint, while table2 will be replicated from tripletex to globaldata, while table 2 will be replicated from globaldata to tripletex.
 
 If you remove a table from the table_names.yml file, the corresponding DMS Task will be stopped, and a notification will be sent to inform the teams through Slack.
 
@@ -26,7 +26,7 @@ For example, if you have a table called ``currency`` that is being replicated fr
 currency: to-tripletex 
 ```
 
-***DO NOT ADD** the ``currency`` table twice in ``table_names.yml`` file.*
+***DO NOT ADD** the table ( ex: ``currency`` ) twice in ``table_names.yml`` file.*
 
 ## Notifications
 
