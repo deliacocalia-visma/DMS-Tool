@@ -6,6 +6,9 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
 slack_client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
+dmschannel="#novak-test"
+botname="DMS-BOT"
+icon="https://upcdn.io/W142hJk/image/demo/4mZ3fv3pLT.png"
 
 
 def get_tables(filename='table_names.yml'):
@@ -77,9 +80,11 @@ def main():
                     print(f"Stopped DMS Replication Task {task_identifier}")
                     try:
                         response = slack_client.chat_postMessage(
-                            channel="#novak-test",
-                            text=f"Stopped DMS Replication Task {task_identifier}",
-                            username="DMS-BOT"
+                            channel=dmschannel,
+                            text=f"Stopped DMS Replication Task *{task_identifier}*",
+                            username=botname,
+                            as_user=False,
+                            icon_url=icon
                         )
                         print(
                             f"Sent Slack message for stopped DMS Replication Task {task_identifier}")
@@ -168,12 +173,37 @@ def main():
                        'Value': 'GitHub DMS Tool'},]
             )
 
+        # waits for task to be ready before starting
+            waiter = client.get_waiter('replication_task_ready')
+            waiter.wait(
+                Filters=[
+                    {
+                        'Name': 'replication-task-arn',
+                        'Values': [
+                            response['ReplicationTask']['ReplicationTaskArn'],
+                        ]
+                    },
+                ],
+                MaxRecords=100,
+                WaiterConfig={
+                    'Delay': 15,
+                    'MaxAttempts': 60
+                }
+            )
+        #starts the task
+            client.start_replication_task(
+                ReplicationTaskArn=response['ReplicationTask']['ReplicationTaskArn'],
+                StartReplicationTaskType='start-replication'
+            )
+
             print('Created DMS Replication Task for table '+table_name.strip())
             try:
                 response = slack_client.chat_postMessage(
-                    channel="#novak-test",
-                    text=f"Created DMS Replication Task for table "+table_name.strip(),
-                    username="DMS-BOT"
+                    channel=dmschannel,
+                    text=f"Created DMS Replication Task for table *" +table_name.strip()+ "* from *" +schema_name + "* to *" +target_schema_name + "*",
+                    username=botname,
+                    as_user=False,
+                    icon_url=icon
                 )
                 print(
                     f"Sent Slack message for created DMS Replication Task for table "+table_name.strip())
