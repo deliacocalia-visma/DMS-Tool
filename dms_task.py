@@ -83,7 +83,6 @@ def main():
                             channel=dmschannel,
                             text=f"Stopped DMS Replication Task *{task_identifier}*",
                             username=botname,
-                            as_user=False,
                             icon_url=icon
                         )
                         print(
@@ -205,7 +204,6 @@ def main():
                     channel=dmschannel,
                     text=f"Created DMS Replication Task for table *" +table_name.strip()+ "* from *" +schema_name + "* to *" +target_schema_name + "*",
                     username=botname,
-                    as_user=False,
                     icon_url=icon
                 )
                 print(
