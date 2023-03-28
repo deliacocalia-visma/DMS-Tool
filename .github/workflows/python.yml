@@ -38,4 +38,5 @@ jobs:
           REPLICATION_INSTANCE_ARN: ${{ secrets.REPLICATION_INSTANCE_ARN }}
           SOURCE_ENDPOINT_ARN: ${{ secrets.SOURCE_ENDPOINT_ARN }}
           TARGET_ENDPOINT_ARN: ${{ secrets.TARGET_ENDPOINT_ARN }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         run: python dms_task.py
