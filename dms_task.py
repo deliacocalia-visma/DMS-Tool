@@ -156,6 +156,9 @@ def main():
                 'ThreadCount': 5,
                 'RecordSuspendDelayInMinutes': 30,
                 'ValidationOnly': False
+            },
+            'Logging': {
+                'EnableLogging': True
             }
         }
 
