@@ -1,3 +1,17 @@
 currency: to-globaldata
 currencyexchangerate: to-globaldata
 tripletexcompany: to-tripletex
+article: to-globaldata
+articlelanguage: to-globaldata
+articlelanguageindexnorwegian: to-globaldata
+relatedarticle: to-globaldata
+articleorder: to-globaldata
+articlecomponentrelation: to-globaldata
+articlebankfilter: to-globaldata
+helpbranch: to-globaldata
+helpcomponentcategory: to-globaldata
+articlelist: to-globaldata
+helpcomponent: to-globaldata
+articlelistitem: to-globaldata
+articlemodulefilter: to-globaldata
+articlepilotfilter: to-globaldata
